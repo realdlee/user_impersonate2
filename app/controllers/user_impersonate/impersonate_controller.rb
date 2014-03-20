@@ -129,8 +129,11 @@ module UserImpersonate
     end
 
     def redirect_on_revert(impersonated_user = nil)
-      debugger
-      url = config_or_default :redirect_on_revert, root_url
+      if request.env["HTTP_REFERER"].include?('manage')
+        url = root_path
+      else
+        url = request.env["HTTP_REFERER"]
+      end
       redirect_to url
     end
 

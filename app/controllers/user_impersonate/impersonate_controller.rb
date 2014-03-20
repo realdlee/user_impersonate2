@@ -130,7 +130,7 @@ module UserImpersonate
 
     def redirect_on_revert(impersonated_user = nil)
       if request.env["HTTP_REFERER"].include?('manage')
-        url = root_path
+        url = config_or_default :redirect_on_revert, root_url
       else
         url = request.env["HTTP_REFERER"]
       end

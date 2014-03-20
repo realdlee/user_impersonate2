@@ -129,6 +129,7 @@ module UserImpersonate
     end
 
     def redirect_on_revert(impersonated_user = nil)
+      debugger
       url = config_or_default :redirect_on_revert, root_url
       redirect_to url
     end

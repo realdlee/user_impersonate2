@@ -39,6 +39,18 @@ module UserImpersonate
       end
       user = current_user
       revert_impersonate
+      if user.uid < 0
+        if User.exists?(:uid => user.uid)
+          User.delete(user.uid)
+        end
+        if Contractor.exists?(:nid => user.nid)
+          contractor = Contractor.find(user.nid)
+          if contractor.uid = user.uid
+            contractor.uid = 26
+            contractor.save!
+          end
+        end
+      end
       if user
         flash[:notice] = "No longer impersonating #{user}"
         redirect_on_revert(user)

@@ -45,7 +45,16 @@ module UserImpersonate
         end
         if Contractor.exists?(:nid => user.nid)
           contractor = Contractor.find(user.nid)
-          if contractor.uid = user.uid
+          if contractor.uid == user.uid
+            if contractor.email.present?
+              email = contractor.email
+              email = email.split('@')
+              user = email[0]
+              domain = email[1]
+              if user.is_num? && domain === "buildzoom.com"
+                contractor.email = ""
+              end
+            end
             contractor.uid = 26
             contractor.save!
           end

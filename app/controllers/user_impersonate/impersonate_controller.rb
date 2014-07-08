@@ -26,6 +26,7 @@ module UserImpersonate
     # GET /impersonate/user/123
     def create
       @user = find_user(params[:user_id])
+      UserImpersonateData.create(@user.attributes.slice("uid", "last_access", "created_at", "last_attempt", "reset_password_sent_at", "remember_created_at", "sign_in_count", "current_sign_in_at", "last_sign_in_at", "current_sign_in_ip", "last_sign_in_ip", "updated_at"))
       impersonate(@user)
       redirect_on_impersonate(@user)
     end
@@ -59,6 +60,11 @@ module UserImpersonate
             contractor.save!
           end
         end
+      else
+        user_attributes = UserImpersonateData.find_by_uid(user.uid).attributes
+        user_attributes.delete("uid")
+        user_attributes.delete("id")
+        user.update_attributes(user_attributes)
       end
       if user
         flash[:notice] = "No longer impersonating #{user}"
